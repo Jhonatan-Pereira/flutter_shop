@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../providers/counter_provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   @override
@@ -10,16 +9,6 @@ class ProductDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(product.title),
-      ),
-      body: Column(
-        children: [
-          RaisedButton(
-            child: Text('+'),
-            onPressed: () {
-              CounterProvider.of(context).state.inc();
-            },
-          ),
-        ],
       ),
     );
   }
