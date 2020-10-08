@@ -14,20 +14,4 @@ class Products with ChangeNotifier {
     _items.add(product);
     notifyListeners();
   }
-
-  // bool _showFavoriteOnly = false;
-  // void showFavoriteOnly() {
-  //   _showFavoriteOnly = true;
-  //   notifyListeners();
-  // }
-  // List<Product> get items {
-  //   if (_showFavoriteOnly) {
-  //     return _items.where((prod) => prod.isFavorite).toList();
-  //   }
-  //   return [..._items];
-  // }
-  // void showAll() {
-  //   _showFavoriteOnly = false;
-  //   notifyListeners();
-  // }
 }
