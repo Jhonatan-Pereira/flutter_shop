@@ -20,16 +20,16 @@ class Orders with ChangeNotifier {
     return [...orders];
   }
 
-  void addOrder(List<CartItem> products, double total) {
+  void addOrder(Cart cart) {
     // final combine = (t, i) => t + (i.price * i.quantity);
     // final total = products.fold(0.0, combine);
     _orders.insert(
       0,
       Order(
         id: Random().nextDouble().toString(),
-        amount: total,
+        amount: cart.totalAmount,
         date: DateTime.now(),
-        products: products,
+        products: cart.items.values.toList(),
       ),
     );
 
