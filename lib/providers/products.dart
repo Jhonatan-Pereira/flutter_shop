@@ -14,4 +14,8 @@ class Products with ChangeNotifier {
     _items.add(product);
     notifyListeners();
   }
+
+  int get itemsCount {
+    return _items.length;
+  }
 }
