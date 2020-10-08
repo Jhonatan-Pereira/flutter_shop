@@ -7,6 +7,7 @@ import 'views/product_detail_screen.dart';
 import 'views/cart_screen.dart';
 import 'views/orders_screen.dart';
 import 'views/products_screen.dart';
+import 'views/product_form_screen.dart';
 
 import 'providers/products.dart';
 import 'providers/cart.dart';
@@ -36,12 +37,14 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.deepOrange,
           fontFamily: 'Lato',
         ),
-        home: ProductOverviewScreen(),
+        // home: ProductOverviewScreen(),
         routes: {
+          AppRoutes.HOME: (ctx) => ProductOverviewScreen(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
           AppRoutes.CART: (ctx) => CartScreen(),
           AppRoutes.ORDERS: (ctx) => OrdersScreen(),
           AppRoutes.PRODUCTS: (ctx) => ProductsSceen(),
+          AppRoutes.PRODUCTS_FORM: (ctx) => ProductFormScreen(),
         },
       ),
     );
