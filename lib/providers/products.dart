@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop/exceptions/http_exception.dart';
+import 'package:shop/utils/constants.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [];
-  final _baseUrl = 'https://flutter-shop-57aa7.firebaseio.com/products';
+  final _baseUrl = '${Constants.BASE_API_URL}/products';
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems {
