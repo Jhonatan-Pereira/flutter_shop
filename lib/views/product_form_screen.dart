@@ -49,7 +49,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     _imageFocusNode.addListener(_updateImageUrl);
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     var isValid = _form.currentState.validate();
     if (!isValid) {
       return;
@@ -70,12 +70,31 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
     final products = Provider.of<Products>(context, listen: false);
     if (_formData['id'] == null) {
-      products.addProduct(newProduct).then((_) {
+      try {
+        await products.addProduct(newProduct);
+        Navigator.of(context).pop();
+      } catch (e) {
+        await showDialog<Null>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Ocorreu um erro!'),
+            content: Text(
+              // error.toString(),
+              'Ocorreu um erro ao salvar o produto.',
+            ),
+            actions: [
+              FlatButton(
+                child: Text('Fechar'),
+                onPressed: () => Navigator.of(context).pop(),
+              )
+            ],
+          ),
+        );
+      } finally {
         setState(() {
           _isLoading = false;
         });
-        Navigator.of(context).pop();
-      });
+      }
     } else {
       setState(() {
         _isLoading = false;
