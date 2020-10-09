@@ -1,24 +1,43 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'product.dart';
-import '../data/dummy_data.dart';
 
 class Products with ChangeNotifier {
-  List<Product> _items = DUMMY_PRODUCTS;
+  List<Product> _items = [];
+  final _url = 'https://flutter-shop-57aa7.firebaseio.com/products.json';
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
-  Future<void> addProduct(Product newProduct) async {
-    const url = 'https://flutter-shop-57aa7.firebaseio.com/products.json';
+  Future<void> loadProducts() async {
+    final response = await http.get(_url);
+    // print(json.decode(response.body));
+    Map<String, dynamic> data = json.decode(response.body);
+    if (data != null) {
+      data.forEach((productId, productData) {
+        _items.add(
+          Product(
+            id: productId,
+            title: productData['title'],
+            description: productData['description'],
+            price: productData['price'],
+            imageUrl: productData['imageUrl'],
+            isFavorite: productData['isFavorite'],
+          ),
+        );
+      });
+      notifyListeners();
+    }
+    return Future.value();
+  }
 
+  Future<void> addProduct(Product newProduct) async {
     final response = await http.post(
-      url,
+      _url,
       body: json.encode({
         'title': newProduct.title,
         'description': newProduct.description,
