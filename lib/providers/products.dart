@@ -7,8 +7,11 @@ import 'package:shop/utils/constants.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
+  String _token;
   List<Product> _items = [];
   final _baseUrl = '${Constants.BASE_API_URL}/products';
+
+  Products(this._token, this._items);
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems {
@@ -16,7 +19,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> loadProducts() async {
-    final response = await http.get("$_baseUrl.json");
+    final response = await http.get("$_baseUrl.json?auth=$_token");
     // print(json.decode(response.body));
     Map<String, dynamic> data = json.decode(response.body);
     _items.clear();
