@@ -1,6 +1,6 @@
-import '../providers/product.dart';
+import 'package:shop/models/product.dart';
 
-final DUMMY_PRODUCTS = [
+final dummyProducts = [
   Product(
     id: 'p1',
     title: 'Red Shirt',
