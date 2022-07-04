@@ -1,12 +1,16 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:shopping/data/dummy_data.dart';
 import 'package:shopping/models/product.dart';
 
 class ProductList with ChangeNotifier {
   final List<Product> _items = dummyProducts;
   // bool _showFavoriteOnly = false;
+  final _baseUrl = dotenv.env['FIREBASE_BASE_URL'];
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
@@ -34,8 +38,31 @@ class ProductList with ChangeNotifier {
   // }
 
   void addProduct(Product produto) {
-    _items.add(produto);
-    notifyListeners();
+    final future = http.post(
+      Uri.parse('$_baseUrl/products.json'),
+      body: jsonEncode(
+        {
+          "name": produto.name,
+          "description": produto.description,
+          "price": produto.price,
+          "imageUrl": produto.imageUrl,
+          "isFavorite": produto.isFavorite,
+        },
+      ),
+    );
+
+    future.then((response) {
+      final id = jsonDecode(response.body)['name'];
+      _items.add(Product(
+        id: id,
+        name: produto.name,
+        description: produto.description,
+        price: produto.price,
+        imageUrl: produto.imageUrl,
+        isFavorite: produto.isFavorite,
+      ));
+      notifyListeners();
+    });
   }
 
   void updateProduct(Product produto) {

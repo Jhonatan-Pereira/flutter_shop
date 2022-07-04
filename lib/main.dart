@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping/models/cart.dart';
 import 'package:shopping/models/order_list.dart';
@@ -11,7 +12,8 @@ import 'package:shopping/pages/products_overview_page.dart';
 import 'package:shopping/pages/products_page.dart';
 import 'package:shopping/utils/app_routes.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
