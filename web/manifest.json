@@ -1,6 +1,6 @@
 {
-    "name": "shop",
-    "short_name": "shop",
+    "name": "shopping",
+    "short_name": "shopping",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
