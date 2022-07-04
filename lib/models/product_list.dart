@@ -37,7 +37,7 @@ class ProductList with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void addProduct(Product produto) {
+  Future<void> addProduct(Product produto) {
     final future = http.post(
       Uri.parse('$_baseUrl/products.json'),
       body: jsonEncode(
@@ -51,7 +51,7 @@ class ProductList with ChangeNotifier {
       ),
     );
 
-    future.then((response) {
+    return future.then<void>((response) {
       final id = jsonDecode(response.body)['name'];
       _items.add(Product(
         id: id,
@@ -65,12 +65,14 @@ class ProductList with ChangeNotifier {
     });
   }
 
-  void updateProduct(Product produto) {
+  Future<void> updateProduct(Product produto) {
     int index = _items.indexWhere((p) => p.id == produto.id);
     if (index >= 0) {
       _items[index] = produto;
       notifyListeners();
     }
+
+    return Future.value();
   }
 
   void removeProduct(Product produto) {
@@ -81,7 +83,7 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  void saveProduct(Map<String, Object> data) {
+  Future<void> saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null;
 
     final product = Product(
@@ -92,9 +94,9 @@ class ProductList with ChangeNotifier {
       imageUrl: data['imageUrl'] as String,
     );
     if (hasId) {
-      updateProduct(product);
+      return updateProduct(product);
     } else {
-      addProduct(product);
+      return addProduct(product);
     }
   }
 }
