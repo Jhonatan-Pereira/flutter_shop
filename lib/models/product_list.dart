@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:shopping/exceptions/http_excepetion.dart';
 import 'package:shopping/models/product.dart';
 
 class ProductList with ChangeNotifier {
@@ -84,11 +85,25 @@ class ProductList with ChangeNotifier {
     return Future.value();
   }
 
-  void removeProduct(Product produto) {
+  Future<void> removeProduct(Product produto) async {
     int index = _items.indexWhere((p) => p.id == produto.id);
     if (index >= 0) {
-      _items.removeWhere((p) => p.id == produto.id);
+      final product = _items[index];
+      _items.remove(product);
       notifyListeners();
+
+      final response = await http.delete(
+        Uri.parse('$_url/${product.id}.json'),
+      );
+
+      if (response.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+        throw HttpException(
+          msg: 'Não foi possível excluir o produto',
+          statusCode: response.statusCode,
+        );
+      }
     }
   }
 
