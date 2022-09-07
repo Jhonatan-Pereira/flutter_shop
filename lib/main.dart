@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping/models/cart.dart';
 import 'package:shopping/models/order_list.dart';
+import 'package:shopping/models/auth.dart';
 import 'package:shopping/models/product_list.dart';
 import 'package:shopping/pages/auth_page.dart';
 import 'package:shopping/pages/cart_page.dart';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => OrderList(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Auth(),
         ),
       ],
       child: MaterialApp(
