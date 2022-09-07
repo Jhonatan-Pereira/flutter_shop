@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:shopping/exceptions/auth_exception.dart';
 
 class Auth with ChangeNotifier {
   final _key = dotenv.env['FIREBASE_API_KEY'] ?? '';
@@ -20,14 +21,20 @@ class Auth with ChangeNotifier {
       }),
     );
 
-    print(response.body);
+    final body = jsonDecode(response.body);
+
+    if (body['error'] != null) {
+      throw AuthException(body['error']['message']);
+    }
+
+    print(body);
   }
 
   Future<void> signup(String email, String password) async {
-    _authenticate(email, password, 'signUp');
+    return _authenticate(email, password, 'signUp');
   }
 
   Future<void> login(String email, String password) async {
-    _authenticate(email, password, 'signInWithPassword');
+    return _authenticate(email, password, 'signInWithPassword');
   }
 }
