@@ -6,7 +6,29 @@ import 'package:http/http.dart' as http;
 import 'package:shopping/exceptions/auth_exception.dart';
 
 class Auth with ChangeNotifier {
-  final _key = dotenv.env['FIREBASE_API_KEY'] ?? '';
+  String? _token;
+  String? _email;
+  String? _uid;
+  DateTime? _expiryDate;
+
+  final String? _key = dotenv.env['FIREBASE_API_KEY'];
+
+  bool get isAuth {
+    final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
+    return _token != null && isValid;
+  }
+
+  String? get token {
+    return isAuth ? _token : null;
+  }
+
+  String? get email {
+    return isAuth ? _email : null;
+  }
+
+  String? get uid {
+    return isAuth ? _uid : null;
+  }
 
   Future<void> _authenticate(
       String email, String password, String urlFragment) async {
@@ -25,9 +47,18 @@ class Auth with ChangeNotifier {
 
     if (body['error'] != null) {
       throw AuthException(body['error']['message']);
-    }
+    } else {
+      _token = body['idToken'];
+      _email = body['email'];
+      _uid = body['localId'];
 
-    print(body);
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(body['expiresIn']),
+        ),
+      );
+      notifyListeners();
+    }
   }
 
   Future<void> signup(String email, String password) async {
