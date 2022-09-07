@@ -8,7 +8,7 @@ import 'package:shopping/exceptions/http_excepetion.dart';
 import 'package:shopping/models/product.dart';
 
 class ProductList with ChangeNotifier {
-  String _token;
+  final String _token;
   List<Product> _items = [];
   // bool _showFavoriteOnly = false;
   final _url = dotenv.env['FIREBASE_BASE_URL'] ?? '';
@@ -23,26 +23,9 @@ class ProductList with ChangeNotifier {
     return _items.length;
   }
 
-  // List<Product> get items {
-  //   if (_showFavoriteOnly) {
-  //     return _items.where((prod) => prod.isFavorite).toList();
-  //   }
-  //   return [..._items];
-  // }
-
-  // void showFavoriteOnly() {
-  //   _showFavoriteOnly = true;
-  //   notifyListeners();
-  // }
-
-  // void showAll() {
-  //   _showFavoriteOnly = false;
-  //   notifyListeners();
-  // }
-
   Future<void> addProduct(Product produto) async {
     final response = await http.post(
-      Uri.parse('${_url}products.json'),
+      Uri.parse('${_url}products.json?auth=$_token'),
       body: jsonEncode(
         {
           "name": produto.name,
@@ -70,7 +53,7 @@ class ProductList with ChangeNotifier {
     int index = _items.indexWhere((p) => p.id == produto.id);
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${_url}products/${produto.id}.json'),
+        Uri.parse('${_url}products/${produto.id}.json?auth=$_token'),
         body: jsonEncode(
           {
             "name": produto.name,
@@ -96,7 +79,7 @@ class ProductList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${_url}products/${product.id}.json'),
+        Uri.parse('${_url}products/${product.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {
@@ -113,7 +96,7 @@ class ProductList with ChangeNotifier {
   Future<void> loadProducts() async {
     _items.clear();
     final response =
-        await http.get(Uri.parse('${_url}products.json?=auth=$_token'));
+        await http.get(Uri.parse('${_url}products.json?auth=$_token'));
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
