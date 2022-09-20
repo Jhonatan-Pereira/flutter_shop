@@ -18,3 +18,8 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Links
 - [Doc Firebase Auth Rest API](https://firebase.google.com/docs/reference/rest/auth?hl=en#section-create-email-password)
+
+## Persist data
+- [Hive](https://pub.dev/packages/hive)
+- [Flutter secure storage](https://pub.dev/packages/flutter_secure_storage)
+- [Shared preferences](https://pub.dev/packages/shared_preferences) *chosen*
