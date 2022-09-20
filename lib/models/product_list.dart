@@ -9,6 +9,7 @@ import 'package:shopping/models/product.dart';
 
 class ProductList with ChangeNotifier {
   final String _token;
+  final String _userId;
   List<Product> _items = [];
   // bool _showFavoriteOnly = false;
   final _url = dotenv.env['FIREBASE_BASE_URL'] ?? '';
@@ -17,7 +18,11 @@ class ProductList with ChangeNotifier {
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
 
-  ProductList(this._token, this._items);
+  ProductList([
+    this._token = '',
+    this._userId = '',
+    this._items = const [],
+  ]);
 
   int get itemsCount {
     return _items.length;
@@ -32,7 +37,6 @@ class ProductList with ChangeNotifier {
           "description": produto.description,
           "price": produto.price,
           "imageUrl": produto.imageUrl,
-          "isFavorite": produto.isFavorite,
         },
       ),
     );
@@ -44,7 +48,6 @@ class ProductList with ChangeNotifier {
       description: produto.description,
       price: produto.price,
       imageUrl: produto.imageUrl,
-      isFavorite: produto.isFavorite,
     ));
     notifyListeners();
   }
@@ -60,7 +63,6 @@ class ProductList with ChangeNotifier {
             "description": produto.description,
             "price": produto.price,
             "imageUrl": produto.imageUrl,
-            "isFavorite": produto.isFavorite,
           },
         ),
       );
@@ -97,9 +99,18 @@ class ProductList with ChangeNotifier {
     _items.clear();
     final response =
         await http.get(Uri.parse('${_url}products.json?auth=$_token'));
+
     if (response.body == 'null') return;
+
+    final favResponse = await http
+        .get(Uri.parse('${_url}userFavorites/$_userId.json?auth=$_token'));
+
+    Map<String, dynamic> favData =
+        favResponse.body == 'null' ? {} : jsonDecode(favResponse.body);
+
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
+      final isFavorite = favData[productId] ?? false;
       _items.add(
         Product(
           id: productId,
@@ -107,7 +118,7 @@ class ProductList with ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
+          isFavorite: isFavorite,
         ),
       );
     });

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,7 +12,10 @@ class OrderList with ChangeNotifier {
   List<Order> _items = [];
   final _url = dotenv.env['FIREBASE_BASE_URL'] ?? '';
 
-  OrderList(this._token, this._items);
+  OrderList([
+    this._token = '',
+    this._items = const [],
+  ]);
 
   List<Order> get items {
     return [..._items];

@@ -6,12 +6,10 @@ import 'package:shopping/models/order_list.dart';
 import 'package:shopping/models/auth.dart';
 import 'package:shopping/models/product_list.dart';
 import 'package:shopping/pages/auth_or_home_page.dart';
-import 'package:shopping/pages/auth_page.dart';
 import 'package:shopping/pages/cart_page.dart';
 import 'package:shopping/pages/orders_page.dart';
 import 'package:shopping/pages/product_detail_page.dart';
 import 'package:shopping/pages/product_form_page.dart';
-import 'package:shopping/pages/products_overview_page.dart';
 import 'package:shopping/pages/products_page.dart';
 import 'package:shopping/utils/app_routes.dart';
 
@@ -31,10 +29,11 @@ class MyApp extends StatelessWidget {
           create: (_) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, ProductList>(
-          create: (_) => ProductList('', []),
+          create: (_) => ProductList(),
           update: (ctx, auth, previous) {
             return ProductList(
               auth.token ?? '',
+              auth.userId ?? '',
               previous?.items ?? [],
             );
           },
@@ -43,7 +42,7 @@ class MyApp extends StatelessWidget {
           create: (_) => Cart(),
         ),
         ChangeNotifierProxyProvider<Auth, OrderList>(
-          create: (_) => OrderList('', []),
+          create: (_) => OrderList(),
           update: (ctx, auth, previous) {
             return OrderList(
               auth.token ?? '',
