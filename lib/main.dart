@@ -12,6 +12,7 @@ import 'package:shopping/pages/product_detail_page.dart';
 import 'package:shopping/pages/product_form_page.dart';
 import 'package:shopping/pages/products_page.dart';
 import 'package:shopping/utils/app_routes.dart';
+import 'package:shopping/utils/custom_route.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -58,6 +59,12 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
               .copyWith(secondary: Colors.deepOrange),
           fontFamily: 'Lato',
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.iOS: CustomPageTransistionBuilder(),
+              TargetPlatform.android: CustomPageTransistionBuilder(),
+            },
+          ),
         ),
         // home: ProductsOverviewPage(),
         routes: {
